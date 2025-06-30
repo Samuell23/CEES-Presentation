@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEES - Community Education Empowerment System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .presentation-container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 2rem;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(45, 90, 39, 0.9), rgba(74, 124, 89, 0.9));
+            overflow: auto;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        .slide h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .slide h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            color: #b8e6b8;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .slide h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 1rem;
+            color: #d4f0d4;
+        }
+        
+        .slide p {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            max-width: min(90%, 900px);
+        }
+        
+        .slide ul {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            line-height: 1.8;
+            text-align: left;
+            max-width: min(90%, 800px);
+            width: 100%;
+        }
+        
+        .slide li {
+            margin-bottom: 0.8rem;
+            padding-left: 1rem;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-left: 5px solid #b8e6b8;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            max-width: min(90%, 800px);
+            width: 100%;
+        }
+        
+        .stat-box {
+            background: rgba(255,255,255,0.15);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1rem;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            color: #b8e6b8;
+            display: block;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.8rem;
+            z-index: 1000;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            padding: 0 1rem;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .slide-counter {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1rem;
+            z-index: 1000;
+        }
+        
+        .team-member {
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+        }
+        
+        .solution-feature {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            margin: 0.8rem;
+            border-radius: 15px;
+            border-left: 4px solid #b8e6b8;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .wireframe-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            width: 100%;
+        }
+        
+        .wireframe-box {
+            background: rgba(255,255,255,0.9);
+            color: #2d5a27;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: min(250px, 90%);
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .wireframe-box h4 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 0.5rem;
+        }
+        
+        .wireframe-box p {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: #2d5a27;
+        }
+        
+        .source {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            width: calc(100% - 2rem);
+            text-align: left;
+        }
+        
+        .emphasis {
+            color: #b8e6b8;
+            font-weight: bold;
+        }
+        
+        .impact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            width: 100%;
+            max-width: min(1000px, 90%);
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem;
+                justify-content: flex-start;
+                padding-top: 4rem;
+                padding-bottom: 6rem;
+            }
+            
+            .navigation {
+                bottom: 0.5rem;
+            }
+            
+            .nav-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .slide-counter {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+            
+            .team-member {
+                display: block;
+                margin: 0.5rem auto;
+                width: max-content;
+                max-width: 90%;
+            }
+            
+            .wireframe-box {
+                width: 90%;
+                min-height: auto;
+            }
+            
+            .source {
+                position: relative;
+                margin-top: 1rem;
+                bottom: auto;
+                left: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>CEES</h1>
+            <h2>Community Education Empowerment System</h2>
+            <p style="font-size: clamp(1.4rem, 3vw, 1.8rem); font-style: italic; margin: 1.5rem 0;">Reclaiming Power. Skill by Skill.</p>
+            <div style="margin-top: 2rem;">
+                <h3>Team: TOPTIERS</h3>
+                <div class="team-member">Oyugi Samuel</div>
+                <div class="team-member">Andrew Sio</div>
+                <div class="team-member">Hezborn Ahoya</div>
+                <div class="team-member">Paul Kamau</div>
+                <div class="team-member">Pauline Ndung'u</div>
+                <div class="team-member">Ian Kemboi</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide">
+            <h2>The Real Problem</h2>
+            <div class="quote">
+                "You can go to school for 12 years and still walk out with nothing you can use to survive."
+            </div>
+            <p><strong>A significant number of young people in Kenya—especially those aged 17 to 30—leave the formal education system without practical, hands-on skills essential for employment, self-employment, or daily life.</strong></p>
+            <p><strong>GCGO:</strong> Quality Education (SDG 4)</p>
+            <p>This skills gap affects both urban and rural communities, contributing to widespread youth unemployment, underemployment, frustration, and disconnection from opportunity.</p>
+        </div>
+
+        <!-- Slide 3: Target Community -->
+        <div class="slide">
+            <h2>This Isn't About School</h2>
+            <p style="font-size: clamp(1.2rem, 3vw, 1.6rem); margin-bottom: 2rem;">This is for:</p>
+            <ul style="font-size: clamp(1.1rem, 2.5vw, 1.5rem); text-align: center; list-style: none;">
+                <li>✓ The ones who never made it to high school</li>
+                <li>✓ The ones who finished KCSE and got stuck</li>
+                <li>✓ The graduates who still can't fix or create anything</li>
+                <li>✓ The hustlers trying to learn from YouTube with 5MB bundles</li>
+            </ul>
+            <p style="font-size: clamp(1.2rem, 3vw, 1.8rem); margin-top: 2rem; font-weight: bold;">They don't need another syllabus.<br>They need a real shot.</p>
+        </div>
+
+        <!-- Slide 4: Youth Unemployment Statistics -->
+        <div class="slide">
+            <h2>The Numbers Don't Lie</h2>
+            <div class="impact-grid">
+                <div class="stat-box">
+                    <span class="stat-number">67%</span>
+                    <p>Youth unemployment rate (ages 15-34)</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">22.7M</span>
+                    <p>Expected youth population by 2030</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">75%</span>
+                    <p>Of youth under 35 face limited job opportunities</p>
+                </div>
+            </div>
+            <div class="source">Sources: Federation of Kenya Employers, World Bank, The Star Kenya</div>
+        </div>
+
+        <!-- Slide 5: Education Completion Rates -->
+        <div class="slide">
+            <h2>Education System Gaps</h2>
+            <div class="impact-grid">
+                <div class="stat-box">
+                    <span class="stat-number">24.5%</span>
+                    <p>Secondary school completion rate</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">7%</span>
+                    <p>Complete technical/vocational training</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">60%</span>
+                    <p>Of secondary graduates proceed to higher education</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem;">Even those who complete formal education often lack practical, market-ready skills.</p>
+            <div class="source">Sources: Zoe Talent Solutions, Statista, World Bank</div>
+        </div>
+
+        <!-- Slide 6: Skills Training Access -->
+        <div class="slide">
+            <h2>Skills Training Reality</h2>
+            <div class="quote">
+                "In rural areas like Turkana, only 40% complete secondary school. Of those, fewer than 20% access post-secondary learning."
+            </div>
+            <p>The formal system is failing to bridge the gap between education and employability, especially in marginalized communities.</p>
+            <div class="source">Source: Uwezo Kenya Report</div>
+        </div>
+
+        <!-- Slide 7: Our Solution -->
+        <div class="slide">
+            <h2>Our Bold Solution</h2>
+            <div class="solution-feature">
+                <h3>Community Learning Hubs</h3>
+                <p>In existing local spaces (churches, libraries, community centers)</p>
+            </div>
+            <div style="font-size: clamp(1.5rem, 3vw, 2rem); margin: 1.5rem 0;">+</div>
+            <div class="solution-feature">
+                <h3>CEES Digital Platform</h3>
+                <p>To track, support, and grow learning communities</p>
+            </div>
+            <p style="margin-top: 2rem; font-size: clamp(1.2rem, 2.5vw, 1.6rem);">
+                <span class="emphasis">People-powered.</span> 
+                <span class="emphasis">Tech-enabled.</span> 
+                <span class="emphasis">Skills-focused.</span>
+            </p>
+        </div>
+
+        <!-- Slide 8: Solution in Action -->
+        <div class="slide">
+            <h2>What Happens at a CEES Hub?</h2>
+            <div class="wireframe-container">
+                <div class="wireframe-box">
+                    <h4>Learn Skills</h4>
+                    <p>Tailoring, coding, farming, carpentry, design</p>
+                </div>
+                <div class="wireframe-box">
+                    <h4>Build Portfolio</h4>
+                    <p>Document progress and showcase work</p>
+                </div>
+                <div class="wireframe-box">
+                    <h4>Connect Mentors</h4>
+                    <p>Access local experts and guidance</p>
+                </div>
+                <div class="wireframe-box">
+                    <h4>Track Growth</h4>
+                    <p>Monitor learning via CEES platform</p>
+                </div>
+                <div class="wireframe-box">
+                    <h4>Earn Income</h4>
+                    <p>Apply skills for sustainable livelihood</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: User Pain Points -->
+        <div class="slide">
+            <h2>What Our Users Told Us</h2>
+            <div class="quote">
+                "Online platforms assume we have data and laptops. We don't."
+            </div>
+            <div class="quote">
+                "I've been trying to learn design, but I get stuck. No one to ask."
+            </div>
+            <p><strong>Key Pain Points:</strong></p>
+            <ul style="text-align: center; list-style: none; font-size: clamp(1.1rem, 2.5vw, 1.5rem);">
+                <li>• Limited internet access and devices</li>
+                <li>• Lack of local mentorship and support</li>
+                <li>• Complex interfaces for low-literacy users</li>
+                <li>• Disconnect between online learning and practical application</li>
+            </ul>
+        </div>
+
+        <!-- Slide 10: Our Improvements -->
+        <div class="slide">
+            <h2>Based on Feedback, We're Improving...</h2>
+            <div class="solution-feature">
+                <h3>Simplified UI Design</h3>
+                <p>Visual instructions for low-literacy users</p>
+            </div>
+            <div class="solution-feature">
+                <h3>Offline-First Network</h3>
+                <p>Hubs function without constant internet</p>
+            </div>
+            <div class="solution-feature">
+                <h3>Community Integration</h3>
+                <p>Local mentors and peer-to-peer learning</p>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: clamp(1.2rem, 2.5vw, 1.6rem);">We're not just building a platform—<br><span class="emphasis">we're creating a learning ecosystem.</span></p>
+        </div>
+
+        <!-- Slide 11: Future Vision -->
+        <div class="slide">
+            <h2>If You Fund This...</h2>
+            <div class="impact-grid">
+                <div class="stat-box">
+                    <span class="stat-number">25+</span>
+                    <p>Hubs across Kenya by 2036</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">100+</span>
+                    <p>Trained mentors by 2027</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">80,000</span>
+                    <p>Youth reached by 2030</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: clamp(1.1rem, 2.5vw, 1.5rem);">
+                <span class="emphasis">Partner with SMEs</span> to link skills directly to income opportunities
+            </p>
+        </div>
+
+        <!-- Slide 12: Why This Matters -->
+        <div class="slide">
+            <h2>Our WHY</h2>
+            <div class="quote">
+                "We don't want young people to survive on luck. We want them to build their own paths."
+            </div>
+            <p style="font-size: clamp(1.2rem, 2.5vw, 1.6rem); margin: 2rem 0;">
+                Because when you give someone a skill—<br>
+                you give them <span class="emphasis">dignity</span>,<br>
+                you give them <span class="emphasis">freedom</span>,<br>
+                you give them the <span class="emphasis">tools to fight poverty</span>—on their own terms.
+            </p>
+            <p style="font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: bold;">
+                That's what CEES is. That's what we're building.
+            </p>
+        </div>
+
+        <!-- Slide 13: Appendix -->
+        <div class="slide">
+            <h2>Additional Insights</h2>
+            <div class="impact-grid">
+                <div class="stat-box">
+                    <h4>Global Context</h4>
+                    <p>Kenya's youth population growth rate (16%) far exceeds global average (2.4%)</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Success Stories</h4>
+                    <p>Ujasiriamali program helped 155,000 youth launch 86,000 businesses</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Income Impact</h4>
+                    <p>Youth employment programs have increased participant incomes by 50%</p>
+                </div>
+            </div>
+            <p>Organizations like TechLit Africa and Bridge Academies demonstrate that community-based, tech-enabled education can thrive in Kenya's context.</p>
+            <div class="source">Sources: World Bank, The Star Kenya, UNESCO</div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">13</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Scroll to top when changing slides
+            window.scrollTo(0, 0);
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+        
+        // Touch events for mobile swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + 50) {
+                previousSlide();
+            }
+        }
+    </script>
+</body>
+</html>
