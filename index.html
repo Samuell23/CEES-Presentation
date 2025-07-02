@@ -206,6 +206,41 @@
             color: #2d5a27;
         }
         
+        /* NEW: Embedded Demo Styles */
+        .demo-container {
+            width: 100%;
+            max-width: 900px;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid #b8e6b8;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .demo-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .screenshot-fallback {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .screenshot-fallback img {
+            width: 100%;
+            max-width: 250px;
+            border: 2px solid #b8e6b8;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .screenshot-fallback img:hover {
+            transform: scale(1.05);
+        }
+        
         .source {
             position: absolute;
             bottom: 1rem;
@@ -258,6 +293,10 @@
                 margin: 0.5rem auto;
                 width: max-content;
                 max-width: 90%;
+            }
+            
+            .demo-container {
+                height: 300px;
             }
             
             .wireframe-box {
@@ -386,31 +425,43 @@
             </p>
         </div>
 
-        <!-- Slide 8: Solution in Action -->
+        <!-- Slide 8: CEES Platform Demo - UPDATED WITH EMBEDDED WIREFRAME -->
         <div class="slide">
-            <h2>What Happens at a CEES Hub?</h2>
-            <div class="wireframe-container">
-                <div class="wireframe-box">
-                    <h4>Learn Skills</h4>
-                    <p>Tailoring, coding, farming, carpentry, design</p>
-                </div>
-                <div class="wireframe-box">
-                    <h4>Build Portfolio</h4>
-                    <p>Document progress and showcase work</p>
-                </div>
-                <div class="wireframe-box">
-                    <h4>Connect Mentors</h4>
-                    <p>Access local experts and guidance</p>
-                </div>
-                <div class="wireframe-box">
-                    <h4>Track Growth</h4>
-                    <p>Monitor learning via CEES platform</p>
-                </div>
-                <div class="wireframe-box">
-                    <h4>Earn Income</h4>
-                    <p>Apply skills for sustainable livelihood</p>
+            <h2>CEES Platform in Action</h2>
+            
+            <!-- Embedded Live Demo -->
+            <div class="demo-container">
+                <iframe 
+                    src="https://samuell23.github.io/Toptiers-work/" 
+                    allow="fullscreen"
+                    title="CEES Platform Wireframe"
+                ></iframe>
+            </div>
+            
+            <!-- Backup Screenshots -->
+            <div id="screenshot-fallback" class="screenshot-fallback">
+                <div class="wireframe-container">
+                    <div style="text-align: center;">
+                        <img src="cees-dashboard.jpg" alt="Dashboard">
+                        <p>Dashboard View</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="cees-learner.jpg" alt="Learner Portal">
+                        <p>Learner Portal</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="cees-mobile.jpg" alt="Mobile View">
+                        <p>Mobile Interface</p>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Link to open in new tab -->
+            <p style="margin-top: 20px;">
+                <a href="https://samuell23.github.io/Toptiers-work/" target="_blank" style="color: #b8e6b8; text-decoration: underline; font-weight: bold;">
+                    Open in New Tab ↗
+                </a>
+            </p>
         </div>
 
         <!-- Slide 9: User Pain Points -->
@@ -574,6 +625,11 @@
                 previousSlide();
             }
         }
+        
+        // Fallback if iframe fails to load
+        document.querySelector('iframe').addEventListener('error', function() {
+            document.getElementById('screenshot-fallback').style.display = 'block';
+        });
     </script>
 </body>
 </html>
